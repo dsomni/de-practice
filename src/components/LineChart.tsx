@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Chart } from 'chart.js';
 import { Bar, Line } from 'react-chartjs-2';
-import { Country, DefaultPlotData } from '../types';
+import { Country, DefaultDataSet } from '../classes/types';
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { ClassAttributes, HTMLAttributes, ReactChild, ReactFragment, ReactPortal, useCallback, useMemo, useState } from 'react';
 import ReactSlider from 'react-slider';
@@ -9,6 +9,8 @@ import RangeSlider from './RangeSlider';
 import InputField from './InputField';
 import StepsNumberNav from './StepsNumberNav';
 import ComputationalBoundsNav from './ComputationalBoundsNav';
+import { Function } from '../classes/Function';
+import { parse } from 'path';
 
 function genRange(start: number, finish: number, n: number) {
     const h = (finish - start) / n;
@@ -21,7 +23,7 @@ function genRange(start: number, finish: number, n: number) {
     return arr;
 }
 
-Chart.register(zoomPlugin);
+// Chart.register(zoomPlugin);
 // const data: DefaultPlotData = {
 //     labels: genRange(1, 51, 1000),
 //     datasets: [{
@@ -164,17 +166,39 @@ const NavsWrapper = styled.div`
     flex-wrap: wrap;
 `;
 
+
+var QuadraticFunction = new Function((x:number) => {return x*x;}, "f(x)=x^2", "rgb(255,0,0)",true);
+var LogFunction = new Function((x:number) =>   {return x * Math.log(x);} , "f(x)=x*log(x)", "rgb(0,255,0)",false);
+var LinearFunction = new Function((x:number) =>   {return x;}  , "f(x)=x", "rgb(0,0,255)",false);
+
+var funcs: Function[] = [QuadraticFunction, LogFunction, LinearFunction];
+
+function genData2(start:number, finish:number, stepsNumber: number){
+    Function.genRanges(start, finish, stepsNumber);
+    var datasets: any[] = [];
+    funcs.forEach(func => {
+        datasets.push(func.getPlotObject());
+    });
+    // console.log(datasets)
+    return {labels: [],datasets: datasets};
+};
+
+function genOptions2(start:number, finish:number, stepsNumber: number){
+    Function.genRanges(start, finish, stepsNumber);
+    // console.log(Function.genDefaultOptions())
+    return Function.genDefaultOptions();
+}
+
 const LineChart: React.FunctionComponent = () => {
 
-    const [data, setData] = useState(genDatasets(genData(10)));
+    // const [data, setData] = useState(genDatasets(genData(10)));
 
     /* Step Number & Co */
     // Step Number
-    const [stepNumber, setStepNumber] = useState(10);
+    const [stepNumber, setStepNumber] = useState(5);
     const stepNumberChanged = (val: any) => {
-        // console.log("NEW VALUE", val);
-        setData(genDatasets(genData(val)));
-        // console.log(data)
+        // setData(genDatasets(genData(val)));
+        setData(genData2(lowerBound, upperBound, val));
         setStepNumber(val);
     };
     // Lower Bound Step Value
@@ -185,7 +209,7 @@ const LineChart: React.FunctionComponent = () => {
         if (stepNumber < val) stepNumberChanged(val);
     }
     // Upper Bound Step Value
-    const [maxStepNumber, setMaxStepNumber] = useState(50);
+    const [maxStepNumber, setMaxStepNumber] = useState(10);
     const maxStepNumberChanged = (e: any) => {
         const val = min(1000, parseInt(e.target.value));
         setMaxStepNumber(val);
@@ -194,24 +218,30 @@ const LineChart: React.FunctionComponent = () => {
 
     /* Computational Bounds & Co */
     // Lower Computational Bound
-    const [lowerBound, setLowerBound] = useState(0);
+    const [lowerBound, setLowerBound] = useState(1);
     const lowerBoundChanged = (e: any) => {
-        const val = max(0, parseInt(e.target.value));
+        const val = max(0, parseFloat(e.target.value));
         setLowerBound(val);
         if (upperBound < val) upperBoundChanged(val);
+        setData(genData2(val, upperBound, stepNumber))
     }
     // Upper Computational Bound
-    const [upperBound, setUpperBound] = useState(100);
+    const [upperBound, setUpperBound] = useState(5);
     const upperBoundChanged = (e: any) => {
-        const val = min(4000000000, parseInt(e.target.value));
+        const val = min(4000000000, parseFloat(e.target.value));
         setUpperBound(val);
         if (lowerBound > val) lowerBoundChanged(val);
+        setData(genData2(lowerBound, val, stepNumber))
     }
 
+    // /* Data & Co */
+    const [data, setData] = useState(genData2(lowerBound, upperBound, stepNumber));
+    // options={genOptions2(lowerBound, upperBound, stepNumber)}
     return (
         <>
             <ChartWrapper>
-                <Line data={data} options={options} />
+                <Line data={data}   options={genOptions2(lowerBound, upperBound, stepNumber)}/>
+                {/* <Line data={data}/> */}
             </ChartWrapper>
             <NavsWrapper>
                 <StepsNumberNav
@@ -223,18 +253,6 @@ const LineChart: React.FunctionComponent = () => {
                     maxVal={maxStepNumber}
                     minVal={minStepNumber} />
                 <ComputationalBoundsNav
-                    label={'Bounds'}
-                    onChangeUpperBound={(e: any) => upperBoundChanged(e)}
-                    onChangeLowerBound={(e: any) => lowerBoundChanged(e)}
-                    upperBound={upperBound}
-                    lowerBound={lowerBound} />
-                                    <ComputationalBoundsNav
-                    label={'Bounds'}
-                    onChangeUpperBound={(e: any) => upperBoundChanged(e)}
-                    onChangeLowerBound={(e: any) => lowerBoundChanged(e)}
-                    upperBound={upperBound}
-                    lowerBound={lowerBound} />
-                                    <ComputationalBoundsNav
                     label={'Bounds'}
                     onChangeUpperBound={(e: any) => upperBoundChanged(e)}
                     onChangeLowerBound={(e: any) => lowerBoundChanged(e)}

@@ -25,6 +25,7 @@ const InputField = ({ name, onChange, value, } :{
      <NameWrapper>{name}</NameWrapper>
       <Input
         type="number"
+        step="any"
         onChange={onChange}
         value={value} />
      </InputWrapper>

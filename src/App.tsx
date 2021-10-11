@@ -3,7 +3,7 @@ import { Global, css } from '@emotion/react';
 import { useState, useEffect } from "react";
 import GlobalInfo from "./components/GlobalInfo";
 import CountryList from "./components/CountryList";
-import { Country, ResponseData } from "./types";
+import { Country, ResponseData } from "./classes/types";
 import BarChart from './components/BarChart';
 import LineChart from './components/LineChart';
 

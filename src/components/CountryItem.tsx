@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { Country } from "../types";
+import { Country } from "../classes/types";
 
 interface Props {
     country: Country;

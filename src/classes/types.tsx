@@ -1,16 +1,31 @@
+export type DefaultPlotObject ={
+    x: string,
+    y: number
+};
+
 export type DefaultDataSet = {
     function: (argument: number) => number;
     label: string;
     borderColor: string;
-    data: number[];
+    data: DefaultPlotObject[];
     fill: boolean;
+    pointRadius: number;
+    spanGaps: boolean;
 };
 
-export type DefaultPlotData ={
-    labels: number[];
-    datasets: DefaultDataSet[];
+export type DefaultOptions = {
+    parsing: {
+        yAxisKey: string;
+        xAxisKey: string;
+    };
+    scales: {
+        xAxis: {
+            ticks: {
+                callback: (value: any, index: any, values: any) => any;
+            };
+        };
+    };
 };
-
 
 
 export type Country = {

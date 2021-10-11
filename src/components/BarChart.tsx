@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Bar } from 'react-chartjs-2';
-import { Country } from '../types';
+import { Country } from '../classes/types';
 
 interface Props {
     countries: Country[];
