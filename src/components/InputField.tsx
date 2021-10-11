@@ -2,12 +2,18 @@ import styled from "@emotion/styled";
 import { memo } from "react";
 
 const InputWrapper = styled.div`
-
+  display:flex;
+  flex-direction:column;
 `;
 
 const Input = styled.input`
   width: 5rem;
   margin: 5px;
+`;
+
+const NameWrapper = styled.span`
+  margin-left: 5px;
+  font-size: 11pt;
 `;
 
 const InputField = ({ name, onChange, value, } :{
@@ -16,11 +22,11 @@ const InputField = ({ name, onChange, value, } :{
 
    return (
      <InputWrapper>
-        <Input
-            type="number"
-            name={name}
-            onChange={onChange}
-            value={value} />
+     <NameWrapper>{name}</NameWrapper>
+      <Input
+        type="number"
+        onChange={onChange}
+        value={value} />
      </InputWrapper>
    );
 };

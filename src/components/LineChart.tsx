@@ -8,6 +8,7 @@ import ReactSlider from 'react-slider';
 import RangeSlider from './RangeSlider';
 import InputField from './InputField';
 import StepsNumberNav from './StepsNumberNav';
+import ComputationalBoundsNav from './ComputationalBoundsNav';
 
 function genRange(start: number, finish: number, n: number) {
     const h = (finish - start) / n;
@@ -157,6 +158,12 @@ const ChartWrapper = styled.div`
     margin: 0 auto;
 `;
 
+const NavsWrapper = styled.div`
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+`;
+
 const LineChart: React.FunctionComponent = () => {
 
     const [data, setData] = useState(genDatasets(genData(10)));
@@ -170,13 +177,6 @@ const LineChart: React.FunctionComponent = () => {
         // console.log(data)
         setStepNumber(val);
     };
-    // Higher Bound Step Value
-    const [maxStepNumber, setMaxStepNumber] = useState(50);
-    const maxStepNumberChanged = (e: any) => {
-        const val = min(1000, parseInt(e.target.value));
-        setMaxStepNumber(val);
-        if (stepNumber > val) stepNumberChanged(val);
-    }
     // Lower Bound Step Value
     const [minStepNumber, setMinStepNumber] = useState(2);
     const minStepNumberChanged = (e: any) => {
@@ -184,20 +184,63 @@ const LineChart: React.FunctionComponent = () => {
         setMinStepNumber(val);
         if (stepNumber < val) stepNumberChanged(val);
     }
+    // Upper Bound Step Value
+    const [maxStepNumber, setMaxStepNumber] = useState(50);
+    const maxStepNumberChanged = (e: any) => {
+        const val = min(1000, parseInt(e.target.value));
+        setMaxStepNumber(val);
+        if (stepNumber > val) stepNumberChanged(val);
+    }
+
+    /* Computational Bounds & Co */
+    // Lower Computational Bound
+    const [lowerBound, setLowerBound] = useState(0);
+    const lowerBoundChanged = (e: any) => {
+        const val = max(0, parseInt(e.target.value));
+        setLowerBound(val);
+        if (upperBound < val) upperBoundChanged(val);
+    }
+    // Upper Computational Bound
+    const [upperBound, setUpperBound] = useState(100);
+    const upperBoundChanged = (e: any) => {
+        const val = min(4000000000, parseInt(e.target.value));
+        setUpperBound(val);
+        if (lowerBound > val) lowerBoundChanged(val);
+    }
 
     return (
         <>
             <ChartWrapper>
                 <Line data={data} options={options} />
             </ChartWrapper>
-            <StepsNumberNav
-                label={'N'}
-                onChangeN={(e: any) => stepNumberChanged(e)}
-                onChangeMaxN={(e: any) => maxStepNumberChanged(e)}
-                onChangeMinN={(e: any) => minStepNumberChanged(e)}
-                value={stepNumber}
-                maxVal={maxStepNumber}
-                minVal={minStepNumber} />
+            <NavsWrapper>
+                <StepsNumberNav
+                    label={'N'}
+                    onChangeN={(e: any) => stepNumberChanged(e)}
+                    onChangeMaxN={(e: any) => maxStepNumberChanged(e)}
+                    onChangeMinN={(e: any) => minStepNumberChanged(e)}
+                    value={stepNumber}
+                    maxVal={maxStepNumber}
+                    minVal={minStepNumber} />
+                <ComputationalBoundsNav
+                    label={'Bounds'}
+                    onChangeUpperBound={(e: any) => upperBoundChanged(e)}
+                    onChangeLowerBound={(e: any) => lowerBoundChanged(e)}
+                    upperBound={upperBound}
+                    lowerBound={lowerBound} />
+                                    <ComputationalBoundsNav
+                    label={'Bounds'}
+                    onChangeUpperBound={(e: any) => upperBoundChanged(e)}
+                    onChangeLowerBound={(e: any) => lowerBoundChanged(e)}
+                    upperBound={upperBound}
+                    lowerBound={lowerBound} />
+                                    <ComputationalBoundsNav
+                    label={'Bounds'}
+                    onChangeUpperBound={(e: any) => upperBoundChanged(e)}
+                    onChangeLowerBound={(e: any) => lowerBoundChanged(e)}
+                    upperBound={upperBound}
+                    lowerBound={lowerBound} />
+            </NavsWrapper>
         </>
     );
 };
