@@ -88,17 +88,19 @@ export class Function {
                 scales: {
                     xAxis: {
                         ticks: {
-                            callback: function (value: any, index: any, values: any) {
-                                // console.log(value)
-                                const v = smoothRange[value];
-                                if (range.indexOf(v) !== -1) return v;
-                                return '';
-                            },
+                            // callback: function (value: any, index: any, values: any) {
+                            //     // console.log(value)
+                            //     const v = smoothRange[value];
+                            //     if (range.indexOf(v) !== -1) return v;
+                            //     return '';
+                            // },
+                            maxTicksLimit: 100,
+
                             font: {
-                                size: 14,
+                                size: 15,
                             }
                         },
-                    }
+                    },
                 }
             };
         else
@@ -120,16 +122,17 @@ export class Function {
     }
 
     protected genData():any{
-        var rng: number[];
         var data: any[]= [];
-        if (this.isSmooth){
-            rng = Function.getSmoothRange();
-        }else{
-            rng = Function.getRange();
-        }
+        var srng = Function.getSmoothRange();
+        var rng = Function.getRange();
         // console.log(Function.getSmoothRange())
-        for (let i = 0; i < rng.length; i++) {
-            data.push({x: rng[i].toFixed(5), y: parseFloat(this.func(rng[i]).toFixed(5))});
+        for (let i = 0; i < srng.length; i++) {
+            if (!this.isSmooth && !rng.includes(srng[i])){
+                data.push(null);
+            }else{
+
+                data.push(parseFloat(this.func(srng[i]).toFixed(5)));
+            }
             // console.log(rng[i], this.func(rng[i]))
         }
         // console.log(data)

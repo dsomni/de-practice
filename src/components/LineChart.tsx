@@ -180,7 +180,7 @@ function genData2(start:number, finish:number, stepsNumber: number){
         datasets.push(func.getPlotObject());
     });
     // console.log(datasets)
-    return {labels: [],datasets: datasets};
+    return {labels: Function.getSmoothRange(),datasets: datasets};
 };
 
 function genOptions2(start:number, finish:number, stepsNumber: number){
