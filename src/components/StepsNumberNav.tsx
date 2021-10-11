@@ -1,13 +1,26 @@
-import { memo, useState } from "react";
+import styled from "@emotion/styled";
+import { memo } from "react";
 import InputField from "./InputField";
 import RangeSlider from "./RangeSlider";
+
+const NavWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    gap: 25px;
+`;
+
 
 const StepsNumberNav = ({ label, onChangeN, onChangeMaxN, onChangeMinN, value, maxVal, minVal }: {
   label: string, onChangeN: any, onChangeMaxN: any, onChangeMinN: any, value: number, maxVal: number, minVal: number
 }) => {
 
   return (
-    <div>
+    <NavWrapper>
+      <InputField
+        name={"Min N"}
+        onChange={onChangeMinN}
+        value={minVal} />
       <RangeSlider
         label={label}
         onChange={onChangeN}
@@ -19,16 +32,8 @@ const StepsNumberNav = ({ label, onChangeN, onChangeMaxN, onChangeMinN, value, m
         name={"Max N"}
         onChange={onChangeMaxN}
         value={maxVal} />
-      <InputField
-        name={"Min N"}
-        onChange={onChangeMinN}
-        value={minVal} />
-    </div>
+    </NavWrapper>
   );
 };
 
 export default memo(StepsNumberNav);
-
-function min(x: number, y: number): number {
-  return x < y ? x : y;
-}
