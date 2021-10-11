@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 
-const RangeSlider = ({ classes, label, onChange, value, min, max, step } :{
-    classes: any, label: any, onChange: any, value: any,  min:any, max:any, step: any
+const RangeSlider = ({  label, onChange, value, min, max, step } :{
+    label: any, onChange: any, value: any,  min:any, max:any, step: any
 }) => {
 
    const [sliderVal, setSliderVal] = useState(0);
@@ -31,7 +31,6 @@ const RangeSlider = ({ classes, label, onChange, value, min, max, step } :{
          min={min}
          max={max}
          step={step}
-         className={`slider ${classes}`}
          onChange={changeCallback}
          onMouseDown={() => setMouseState("down")}
          onMouseUp={() => setMouseState("up")}

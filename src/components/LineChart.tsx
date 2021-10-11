@@ -6,6 +6,8 @@ import zoomPlugin from 'chartjs-plugin-zoom'
 import { ClassAttributes, HTMLAttributes, ReactChild, ReactFragment, ReactPortal, useCallback, useMemo, useState } from 'react';
 import ReactSlider from 'react-slider';
 import RangeSlider from './RangeSlider';
+import InputField from './InputField';
+import StepsNumberNav from './StepsNumberNav';
 
 function genRange(start: number, finish: number, n: number) {
     const h = (finish - start) / n;
@@ -157,60 +159,56 @@ const ChartWrapper = styled.div`
 
 const LineChart: React.FunctionComponent = () => {
 
-
     const [data, setData] = useState(genDatasets(genData(10)));
 
-
-    const [parentVal, setParentVal] = useState(10);
-    const sliderValueChanged = (val: any) => {
+    /* Step Number & Co */
+    // Step Number
+    const [stepNumber, setStepNumber] = useState(10);
+    const stepNumberChanged = (val: any) => {
         // console.log("NEW VALUE", val);
         setData(genDatasets(genData(val)));
         // console.log(data)
-        setParentVal(val);
+        setStepNumber(val);
     };
-
-
-    const [getN, setN] = useState(50);
-
-    const [inputN, setInputN] = useState(50);
-    const inputsHandler = (e: any) => {
-        console.log(e.target.value)
-        setInputN(e.target.value);
-        // console.log(inputN);
-        setN(parseInt(e.target.value));
-        sliderValueChanged(e.target.value);
+    // Higher Bound Step Value
+    const [maxStepNumber, setMaxStepNumber] = useState(50);
+    const maxStepNumberChanged = (e: any) => {
+        const val = min(1000, parseInt(e.target.value));
+        setMaxStepNumber(val);
+        if (stepNumber > val) stepNumberChanged(val);
     }
-
-
-
+    // Lower Bound Step Value
+    const [minStepNumber, setMinStepNumber] = useState(2);
+    const minStepNumberChanged = (e: any) => {
+        const val = max(2, parseInt(e.target.value));
+        setMinStepNumber(val);
+        if (stepNumber < val) stepNumberChanged(val);
+    }
 
     return (
         <>
             <ChartWrapper>
                 <Line data={data} options={options} />
             </ChartWrapper>
-            <div>
-                {/* <h1>PARENT VALUE: {parentVal}</h1> */}
-                <RangeSlider classes="additional-css-classes"
-                    label={"N"}
-                    onChange={(e: any) => sliderValueChanged(e)}
-                    value={parentVal}
-                    min={2}
-                    max={getN}
-                    step={1} />
-            </div>
-            <input
-                type="number"
-                name="n"
-                onChange={inputsHandler}
-                value={inputN} />
+            <StepsNumberNav
+                label={'N'}
+                onChangeN={(e: any) => stepNumberChanged(e)}
+                onChangeMaxN={(e: any) => maxStepNumberChanged(e)}
+                onChangeMinN={(e: any) => minStepNumberChanged(e)}
+                value={stepNumber}
+                maxVal={maxStepNumber}
+                minVal={minStepNumber} />
         </>
     );
 };
 
 export default LineChart;
 
-// function componentDidMount() {
-//     throw new Error('Function not implemented.');
-// }
+
+function min(x: number, y: number) {
+    return x < y ? x : y;
+}
+function max(x: number, y: number) {
+    return x > y ? x : y;
+}
 
