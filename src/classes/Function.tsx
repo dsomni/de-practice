@@ -31,6 +31,7 @@ export class Function {
     static genRanges(start: number, finish: number, stepsNumber: number){
         Function.range = [];
         Function.smoothRange = [];
+        var prev_steps_number = stepsNumber;
         if (stepsNumber > 0){
             const stepSize:number = (finish-start) / (stepsNumber-1);
             var next: number = start;
@@ -46,10 +47,13 @@ export class Function {
             Function.range.push(finish);
             Function.smoothRange.push(finish);
         }
-
+        // console.log("aaaaa");
+        // console.log(Function.range)
+        // console.log(Function.smoothRange)
 
         // Function.smoothRange = [start];
-        stepsNumber = 9;
+        stepsNumber = this.max(prev_steps_number,this.min(prev_steps_number*100,800));
+        // console.log(stepsNumber)
         const stepSize:number = (finish-start) / (stepsNumber-1);
         next = start;
         while (stepsNumber>0){
@@ -59,10 +63,17 @@ export class Function {
             stepsNumber-=1;
         }
         // Function.smoothRange.push(finish);
-        Function.smoothRange.sort();
+        Function.smoothRange.sort((a:number, b:number) => (a-b));
         // console.log("!!!!")
-        // console.log(Function.range)
-        // console.log(Function.smoothRange)
+        // console.log(Function.range.includes(5))
+        // console.log(Function.smoothRange.includes(5))
+    }
+
+    static min(x: number, y: number) {
+        return x < y ? x : y;
+    }
+    static max(x: number, y: number) {
+        return x > y ? x : y;
     }
 
     static genDefaultOptions(): any{
@@ -85,19 +96,30 @@ export class Function {
                         }
                     }
                 },
+                scaleShowValues: true,
                 scales: {
+
                     xAxis: {
                         ticks: {
                             callback: function (value: any, index: any, values: any) {
                                 // console.log(value)
                                 const v = smoothRange[value];
-                                if (range.indexOf(v) !== -1) return v;
+                                if (range.indexOf(v) !== -1){
+                                    return v.toFixed(5);
+                                }
                                 return '';
                             },
+                            // maxTicksLimit: 500,
+                            autoSkip: false,
                             font: {
                                 size: 14,
                             }
                         },
+                    },
+                    yAxes: {
+                        ticks:{
+                            autoSkip: false,
+                        }
                     }
                 }
             };
@@ -130,7 +152,7 @@ export class Function {
         // console.log(Function.getSmoothRange())
         for (let i = 0; i < rng.length; i++) {
             data.push({x: rng[i].toFixed(5), y: parseFloat(this.func(rng[i]).toFixed(5))});
-            // console.log(rng[i], this.func(rng[i]))
+            // console.log(rng[i].toFixed(5), this.func(rng[i]).toFixed(5))
         }
         // console.log(data)
         return data;

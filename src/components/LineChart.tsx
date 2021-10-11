@@ -156,8 +156,8 @@ const optionsB: any = {
 
 
 const ChartWrapper = styled.div`
-    max-width: 1024px;
-    margin: 0 auto;
+    max-width: 2000px;
+    margin: 2px auto;
 `;
 
 const NavsWrapper = styled.div`
@@ -222,7 +222,7 @@ const LineChart: React.FunctionComponent = () => {
     const lowerBoundChanged = (e: any) => {
         const val = max(0, parseFloat(e.target.value));
         setLowerBound(val);
-        if (upperBound < val) upperBoundChanged(val);
+        if (upperBound < val) upperBoundChanged({target:{value:val}});
         setData(genData2(val, upperBound, stepNumber))
     }
     // Upper Computational Bound
@@ -230,7 +230,7 @@ const LineChart: React.FunctionComponent = () => {
     const upperBoundChanged = (e: any) => {
         const val = min(4000000000, parseFloat(e.target.value));
         setUpperBound(val);
-        if (lowerBound > val) lowerBoundChanged(val);
+        if (lowerBound > val) lowerBoundChanged({target:{value:val}});
         setData(genData2(lowerBound, val, stepNumber))
     }
 
