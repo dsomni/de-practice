@@ -3,7 +3,9 @@ import { Chart } from 'chart.js';
 import { Bar, Line } from 'react-chartjs-2';
 import { Country, DefaultPlotData } from '../types';
 import zoomPlugin from 'chartjs-plugin-zoom'
-import { useState } from 'react';
+import { ClassAttributes, HTMLAttributes, ReactChild, ReactFragment, ReactPortal, useCallback, useMemo, useState } from 'react';
+import ReactSlider from 'react-slider';
+import RangeSlider from './RangeSlider';
 
 function genRange(start: number, finish: number, n: number) {
     const h = (finish - start) / n;
@@ -17,8 +19,40 @@ function genRange(start: number, finish: number, n: number) {
 }
 
 Chart.register(zoomPlugin);
-const data: DefaultPlotData = {
-    labels: genRange(1, 51, 1000),
+// const data: DefaultPlotData = {
+//     labels: genRange(1, 51, 1000),
+//     datasets: [{
+//         label: "f(x) = x",
+//         function: function (x: any) { return x },
+//         borderColor: "rgba(75, 192, 192, 1)",
+//         data: [],
+//         fill: false
+//     },
+//     {
+//         label: "f(x) = x²",
+//         function: function (x: number) { return x * x },
+//         borderColor: "rgba(153, 102, 255, 1)",
+//         data: [],
+//         fill: false
+//     },
+//     {
+//         label: "f(x) = x * log(x)",
+//         function: function (x: number) { return x * Math.log(x) },
+//         borderColor: "rgba(255, 206, 86, 1)",
+//         data: [],
+//         fill: false
+//     }]
+// };
+const options: any = {
+    // radius: 0,
+    bezierCurve : false,
+    interaction: {
+        intersect: false
+    },
+};
+
+const genData = (number: number) => ({
+    labels: genRange(1, 51, number),
     datasets: [{
         label: "f(x) = x",
         function: function (x: any) { return x },
@@ -31,7 +65,7 @@ const data: DefaultPlotData = {
         function: function (x: number) { return x * x },
         borderColor: "rgba(153, 102, 255, 1)",
         data: [],
-        fill: false
+        fill: false,
     },
     {
         label: "f(x) = x * log(x)",
@@ -40,35 +74,9 @@ const data: DefaultPlotData = {
         data: [],
         fill: false
     }]
-};
-const zoomOptions = {
-    pan: {
-      enabled: true,
-      mode: 'xy',
-      threshold: 5,
-    },
-    zoom: {
-      wheel: {
-        enabled: true
-      },
-      pinch: {
-        enabled: true
-      },
-      mode: 'xy',
-    },
-};
-const options: any = {
-    radius: 0,
-    interaction: {
-        intersect: false
-      },
-    // plugins: {
-    //     zoom: zoomOptions,
-    // }
+});
 
-};
-
-function genDatasets(data: DefaultPlotData) {
+function genDatasets(data: any) {
     for (var i = 0; i < data.datasets.length; i++) {
 
         for (var j = 0; j < data.labels.length; j++) {
@@ -78,7 +86,10 @@ function genDatasets(data: DefaultPlotData) {
             data.datasets[i].data.push(y);
         }
     }
+    return data;
 }
+
+
 
 
 const ChartWrapper = styled.div`
@@ -88,11 +99,34 @@ const ChartWrapper = styled.div`
 
 const LineChart: React.FunctionComponent = () => {
 
-    genDatasets(data);
+
+    const [data, setData] = useState(genData(10));
+
+
+    const [parentVal, setParentVal] = useState(10);
+    const sliderValueChanged = (val: any) => {
+        console.log("NEW VALUE", val);
+        setData(genDatasets(genData(val)));
+        console.log(data)
+        setParentVal(val);
+    };
+
     return (
-        <ChartWrapper>
-            <Line data={data} options={options} />
-        </ChartWrapper>
+        <>
+            <ChartWrapper>
+                <Line data={data} options={options} />
+            </ChartWrapper>
+            <div>
+                <h1>PARENT VALUE: {parentVal}</h1>
+                <RangeSlider classes="additional-css-classes"
+                label={"N"}
+                onChange={(e: any) => sliderValueChanged(e)}
+                value={parentVal}
+                min={2}
+                max={50}
+                step={1} />
+            </div>
+        </>
     );
 };
 
