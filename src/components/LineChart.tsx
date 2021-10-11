@@ -90,6 +90,25 @@ function genDatasets(data: any) {
 }
 
 
+// const dataA: any = {
+//     labels: [1,2,3,4,5],
+//     datasets: [{
+//         label: "f(x) = x^2",
+//         function: function (x: any) { return x*x },
+//         borderColor: "rgba(75, 192, 192, 1)",
+//         data: [1,4,9,16,25],
+//         fill: false,
+//         pointRadius: 0
+//     },
+//     {
+//         label: "f(x) = x² round",
+//         function: function (x: number) { return x * x },
+//         borderColor: "rgba(153, 102, 255, 1)",
+//         data: [1, null, 9, null, 25],
+//         fill: false,
+//         spanGaps: true
+//     }]
+// };
 
 
 const ChartWrapper = styled.div`
@@ -97,10 +116,10 @@ const ChartWrapper = styled.div`
     margin: 0 auto;
 `;
 
-const LineChart: React.FunctionComponent = () => {
+const LineChart : React.FunctionComponent = () => {
 
 
-    const [data, setData] = useState(genData(10));
+    const [data, setData] = useState(genDatasets(genData(10)));
 
 
     const [parentVal, setParentVal] = useState(10);
@@ -117,7 +136,7 @@ const LineChart: React.FunctionComponent = () => {
                 <Line data={data} options={options} />
             </ChartWrapper>
             <div>
-                <h1>PARENT VALUE: {parentVal}</h1>
+                {/* <h1>PARENT VALUE: {parentVal}</h1> */}
                 <RangeSlider classes="additional-css-classes"
                 label={"N"}
                 onChange={(e: any) => sliderValueChanged(e)}
@@ -131,3 +150,8 @@ const LineChart: React.FunctionComponent = () => {
 };
 
 export default LineChart;
+
+// function componentDidMount() {
+//     throw new Error('Function not implemented.');
+// }
+

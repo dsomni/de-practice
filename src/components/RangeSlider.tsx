@@ -1,34 +1,30 @@
-import { memo, SetStateAction, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
-//destructive props
 const RangeSlider = ({ classes, label, onChange, value, min, max, step } :{
     classes: any, label: any, onChange: any, value: any,  min:any, max:any, step: any
 }) => {
-    //set initial value to 0 this will change inside useEffect in first render also| or you can directly set useState(value)
+
    const [sliderVal, setSliderVal] = useState(0);
 
-   // keep mouse state to determine whether i should call parent onChange or not.
-   // so basically after dragging the slider and then release the mouse then we will call the parent onChange, otherwise parent function will get call each and every change
    const [mouseState, setMouseState] = useState("");
 
    useEffect(() => {
-     setSliderVal(value); // set new value when value gets changed, even when first render
+     setSliderVal(value);
    }, [value]);
 
    const changeCallback = (e: any) => {
-     setSliderVal(e.target.value); // update local state of the value when changing
+     setSliderVal(e.target.value);
    }
 
    useEffect(() => {
      if (mouseState === "up") {
-       onChange(sliderVal)// when mouse is up then call the parent onChange
+       onChange(sliderVal)
      }
    }, [mouseState])
 
    return (
      <div className="range-slider">
-       <p>{label}</p>
-       <h3>value: { sliderVal }</h3>
+       <h3>{label}</h3>
        <input
          type="range"
          value={sliderVal}
@@ -36,11 +32,11 @@ const RangeSlider = ({ classes, label, onChange, value, min, max, step } :{
          max={max}
          step={step}
          className={`slider ${classes}`}
-         id="myRange"
          onChange={changeCallback}
-         onMouseDown={() => setMouseState("down")} // When mouse down set the mouseState to 'down'
-         onMouseUp={() => setMouseState("up")} // When mouse down set the mouseState to 'up' | now we can call the parent onChnage
+         onMouseDown={() => setMouseState("down")}
+         onMouseUp={() => setMouseState("up")}
        />
+        <h4>value: { sliderVal }</h4>
      </div>
    );
 };
