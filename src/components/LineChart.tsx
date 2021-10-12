@@ -227,7 +227,7 @@ const LineChart: React.FunctionComponent = () => {
         setData(genData2(val, upperBound, stepNumber))
     }
     // Upper Computational Bound
-    const [upperBound, setUpperBound] = useState(5);
+    const [upperBound, setUpperBound] = useState(10);
     const upperBoundChanged = (e: any) => {
         const val = min(4000000000, parseFloat(e.target.value));
         setUpperBound(val);
@@ -236,7 +236,7 @@ const LineChart: React.FunctionComponent = () => {
     }
 
     /* Initial Value & Co */
-    const [initialValue, setInitialValue] = useState(1);
+    const [initialValue, setInitialValue] = useState(0);
     const initialValueChanged = (e: any) => {
         const val = max(0, parseFloat(e.target.value));
         setInitialValue(val);

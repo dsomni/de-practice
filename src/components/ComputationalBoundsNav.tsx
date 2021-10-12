@@ -45,7 +45,7 @@ const ComputationalBoundsNav = ({ label, onChangeUpperBound, onChangeLowerBound,
           onChange={onChangeLowerBound}
           value={lowerBound} />
         <InputField
-          name={"Upper Bound"}
+          name={"X"}
           onChange={onChangeUpperBound}
           value={upperBound} />
       </InputsWrapper>
