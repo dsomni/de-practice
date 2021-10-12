@@ -47,22 +47,18 @@ function genOptions(lowerBound: number, upperBound: number, stepNumber: number, 
 const generator = new Generator();
 var actualFunction = new SmoothFunction(
     (x: number, x0: number, y0: number) => {
-        if (x0 === 0) {
-            return 0
-        }
         var c = Math.pow(Math.E, x0) * (y0 + x0) / x0;
         return c * Math.pow(Math.E, x * (-1)) * x - x;
     },
     "y = c*e^(-x)*x -x",
     "red");
 
-const f = (x: number, y: number) => { return y / x - y - x };
+const f = (x: number, y: number) => {
+    if (Math.abs(parseFloat(x.toFixed(5)))===0) return 0;
+    return y / x - y - x; };
 
 var Euler = new ApproximateFunction(
     (x: number, y: number, h: number) => {
-        if (x === 0) {
-            return 0
-        }
         return y + h * f(x, y);
     },
     "Euler",
@@ -71,9 +67,6 @@ var Euler = new ApproximateFunction(
 
 var ImprovedEuler = new ApproximateFunction(
     (x: number, y: number, h: number) => {
-        if (x === 0) {
-            return 0
-        }
         const k1 = h * f(x, y);
         const k2 = h * f(x + h, y + k1);
         return y + (k1 + k2) / 2;
@@ -81,15 +74,27 @@ var ImprovedEuler = new ApproximateFunction(
     "ImprovedEuler",
     "green");
 
+function a(x: number, y: number, h: number){
+    const k1 = h * f(x, y);
+    const k2 = h * f(x + h / 2, y + k1 / 2);
+    console.log('!!')
+    console.log(k2)
+    const k3 = h * f(x + h / 2, y + k2 / 2);
+    const k4 = h * f(x + h, y + k3);
+    return y + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+};
+
+console.log(a(-0.20202,0.20202,0.4040))
+
 var Runge_Kutta = new ApproximateFunction(
     (x: number, y: number, h: number) => {
-        if (x === 0) {
-            return 0
-        }
         const k1 = h * f(x, y);
         const k2 = h * f(x + h / 2, y + k1 / 2);
         const k3 = h * f(x + h / 2, y + k2 / 2);
         const k4 = h * f(x + h, y + k3);
+        if (y + (k1 + 2 * k2 + 2 * k3 + k4) / 6 > 1000000 && y<10000){
+            // console.log(x,y,h)
+        }
         return y + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
     },
     "Runge_Kutta",

@@ -22,6 +22,10 @@ export class Generator {
         // if (!range.includes(parseFloat(finish.toFixed(5)))) {
         //     range.push(finish);
         // }
+        // const index = range.indexOf(0);
+        // if (index > -1) {
+        //     range.splice(index, 1);
+        // }
         return range;
     }
 
@@ -40,6 +44,11 @@ export class Generator {
             next += stepSize;
             stepsNumber -= 1;
         }
+
+        // const index = smoothRange.indexOf(0);
+        // if (index > -1) {
+        //     smoothRange.splice(index, 1);
+        // }
         // if (!smoothRange.includes(parseFloat(finish.toFixed(5)))) {
         //     smoothRange.push(finish);
         // }
