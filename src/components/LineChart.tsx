@@ -74,17 +74,6 @@ var ImprovedEuler = new ApproximateFunction(
     "ImprovedEuler",
     "green");
 
-function a(x: number, y: number, h: number){
-    const k1 = h * f(x, y);
-    const k2 = h * f(x + h / 2, y + k1 / 2);
-    console.log('!!')
-    console.log(k2)
-    const k3 = h * f(x + h / 2, y + k2 / 2);
-    const k4 = h * f(x + h, y + k3);
-    return y + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
-};
-
-console.log(a(-0.20202,0.20202,0.4040))
 
 var Runge_Kutta = new ApproximateFunction(
     (x: number, y: number, h: number) => {
