@@ -10,7 +10,7 @@ const NavWrapper = styled.div`
     padding: 5px;
     gap: 10px;
     flex-direction: column;
-    width: 30%;
+    width: 100%;
     min-width: 430px;
     max-width: 500px;
     justify-content: space-around;

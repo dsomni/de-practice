@@ -10,7 +10,7 @@ const NavWrapper = styled.div`
     margin: 10px;
     padding: 5px;
     gap: 25px;
-    width: 30vw;
+    width: 100%;
     min-width: 430px;
     max-width: 500px;
     justify-content: space-around;

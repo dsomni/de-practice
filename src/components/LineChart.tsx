@@ -11,13 +11,19 @@ import { ApproximateFunction } from '../classes/ApproximateFunction';
 
 const ChartWrapper = styled.div`
     max-width: 1800px;
-    margin: 2px auto;
+    width: 100%;
+    margin:15px;
 `;
 
 const NavsWrapper = styled.div`
     margin: 10px;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+`;
+
+const GlobalWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
 `;
 
 
@@ -89,6 +95,7 @@ var Runge_Kutta = new ApproximateFunction(
     "Runge_Kutta",
     "black");
 
+
 var funcs = [actualFunction, Euler, ImprovedEuler, Runge_Kutta];
 
 const LineChart: React.FunctionComponent = () => {
@@ -121,12 +128,12 @@ const LineChart: React.FunctionComponent = () => {
     // Lower Computational Bound
     const [lowerBound, setLowerBound] = useState(1);
     const lowerBoundChanged = (e: any) => {
-        if (e.target.value){
+        if (e.target.value) {
             const val = max(-400000000, parseFloat(e.target.value));
             setLowerBound(val);
             if (upperBound < val) upperBoundChanged({ target: { value: val } });
             setData(genData(val, upperBound, stepNumber, initialValue))
-        }else{
+        } else {
             setLowerBound(0);
             if (upperBound < 0) upperBoundChanged({ target: { value: 0 } });
             setData(genData(0, upperBound, stepNumber, initialValue))
@@ -135,12 +142,12 @@ const LineChart: React.FunctionComponent = () => {
     // Upper Computational Bound
     const [upperBound, setUpperBound] = useState(10);
     const upperBoundChanged = (e: any) => {
-        if (e.target.value){
+        if (e.target.value) {
             const val = min(400000000, parseFloat(e.target.value));
             setUpperBound(val);
             if (lowerBound > val) lowerBoundChanged({ target: { value: val } });
             setData(genData(lowerBound, val, stepNumber, initialValue));
-        }else{
+        } else {
             setUpperBound(0);
             if (lowerBound > 0) lowerBoundChanged({ target: { value: 0 } });
             setData(genData(lowerBound, 0, stepNumber, initialValue));
@@ -161,30 +168,31 @@ const LineChart: React.FunctionComponent = () => {
 
     return (
         <>
-            <ChartWrapper>
-                <Line data={data} options={genOptions(lowerBound, upperBound, stepNumber, true)} />
-                {/* <Line data={data}/> */}
-            </ChartWrapper>
-            <NavsWrapper>
-                <StepsNumberNav
-                    label={'N'}
-                    onChangeN={(e: any) => stepNumberChanged(e)}
-                    onChangeMaxN={(e: any) => maxStepNumberChanged(e)}
-                    onChangeMinN={(e: any) => minStepNumberChanged(e)}
-                    value={stepNumber}
-                    maxVal={maxStepNumber}
-                    minVal={minStepNumber} />
-                <ComputationalBoundsNav
-                    label={'Bounds'}
-                    onChangeUpperBound={(e: any) => upperBoundChanged(e)}
-                    onChangeLowerBound={(e: any) => lowerBoundChanged(e)}
-                    upperBound={upperBound}
-                    lowerBound={lowerBound} />
-                <InitialValueNav
-                    label={'Initial value'}
-                    onChange={(e: any) => initialValueChanged(e)}
-                    value={initialValue} />
-            </NavsWrapper>
+            <GlobalWrapper>
+                <NavsWrapper>
+                    <StepsNumberNav
+                        label={'N'}
+                        onChangeN={(e: any) => stepNumberChanged(e)}
+                        onChangeMaxN={(e: any) => maxStepNumberChanged(e)}
+                        onChangeMinN={(e: any) => minStepNumberChanged(e)}
+                        value={stepNumber}
+                        maxVal={maxStepNumber}
+                        minVal={minStepNumber} />
+                    <ComputationalBoundsNav
+                        label={'Bounds'}
+                        onChangeUpperBound={(e: any) => upperBoundChanged(e)}
+                        onChangeLowerBound={(e: any) => lowerBoundChanged(e)}
+                        upperBound={upperBound}
+                        lowerBound={lowerBound} />
+                    <InitialValueNav
+                        label={'Initial value'}
+                        onChange={(e: any) => initialValueChanged(e)}
+                        value={initialValue} />
+                </NavsWrapper>
+                <ChartWrapper>
+                    <Line data={data} options={genOptions(lowerBound, upperBound, stepNumber, true)} />
+                </ChartWrapper>
+            </GlobalWrapper>
         </>
     );
 };
