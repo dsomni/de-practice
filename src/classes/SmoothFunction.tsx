@@ -28,7 +28,7 @@ export class SmoothFunction {
         for (let i = 0; i < smoothRange.length; i++) {
             data.push({ x: smoothRange[i].toFixed(5), y: parseFloat(this.func(smoothRange[i], start, y0).toFixed(5)) });
         }
-
+        this.data = data;
         return {
             label: this.label,
             borderColor: this.colour,
@@ -46,6 +46,7 @@ export class SmoothFunction {
                 data.push({ x: smoothRange[i].toFixed(5), y: parseFloat(this.func(smoothRange[i], x0, y0).toFixed(5)) });
             }
         }
+        this.data = data;
         return {
             label: this.label,
             borderColor: this.colour,

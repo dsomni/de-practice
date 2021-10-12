@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import { memo } from "react";
 import InputField from "./InputField";
-import RangeSlider from "./RangeSlider";
 
 const NavWrapper = styled.div`
     border: 2px black solid;

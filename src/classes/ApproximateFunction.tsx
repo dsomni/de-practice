@@ -43,7 +43,7 @@ export class ApproximateFunction {
                 y: parseFloat(y.toFixed(5))
             })
         }
-
+        this.data = data;
         return {
             label: this.label,
             borderColor: this.colour,
@@ -78,7 +78,7 @@ export class ApproximateFunction {
                 y: y
             })
         }
-
+        this.data = data;
         return {
             label: this.label,
             borderColor: this.colour,
