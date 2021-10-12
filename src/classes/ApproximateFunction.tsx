@@ -1,19 +1,15 @@
-import { Generator } from "./Generator";
-
 export class ApproximateFunction {
-    private func_to_approx: (x: number, y: number) => number; //f(x,y)
     private gen_function: (x: number, y: number, stepSize: number) => number;
     private label: string;
     private colour: string;
     public isSmooth: boolean = false;
 
     private data: number[] = [];
-    private generator = new Generator();
 
-    constructor(func_to_approx: (x: number, y: number) => number,
+    constructor(
         gen_function: (x: number, y: number, stepSize: number) => number,
         label: string, colour: string) {
-        this.func_to_approx = func_to_approx;
+
         this.gen_function = gen_function;
         this.label = label;
         this.colour = colour;
@@ -65,6 +61,9 @@ export class ApproximateFunction {
             return [];
         }
         const stepSize: number = range[1] - range[0];
+        if (stepSize<= 0){
+            return [];
+        }
         var x = range[0];
         var y = y0;
         data.push({
@@ -73,9 +72,10 @@ export class ApproximateFunction {
         })
 
         for (let i = 1; i < range.length; i++) {
+            y = this.gen_function(range[i-1], y, stepSize);
             data.push({
-                x: x.toFixed(5),
-                y: this.gen_function(range[i], y, stepSize)
+                x: range[i].toFixed(5),
+                y: y
             })
         }
 
@@ -84,7 +84,7 @@ export class ApproximateFunction {
             borderColor: this.colour,
             data: data,
             fill: false,
-            pointRadius: 3,
+            pointRadius: 4,
             spanGaps: true
         };
     }

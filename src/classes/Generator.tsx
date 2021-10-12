@@ -19,9 +19,9 @@ export class Generator {
             next += stepSize;
             stepsNumber -= 1;
         }
-        if (!range.includes(finish)) {
-            range.push(finish);
-        }
+        // if (!range.includes(parseFloat(finish.toFixed(5)))) {
+        //     range.push(finish);
+        // }
         return range;
     }
 
@@ -40,9 +40,9 @@ export class Generator {
             next += stepSize;
             stepsNumber -= 1;
         }
-        if (!smoothRange.includes(finish)) {
-            smoothRange.push(finish);
-        }
+        // if (!smoothRange.includes(parseFloat(finish.toFixed(5)))) {
+        //     smoothRange.push(finish);
+        // }
 
         const smoothStepSize: number = (finish - start) / (smoothStepsNumber - 1);
         next = start;

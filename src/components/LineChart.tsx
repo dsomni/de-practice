@@ -6,6 +6,7 @@ import ComputationalBoundsNav from './ComputationalBoundsNav';
 import InitialValueNav from './InitialValueNav';
 import { SmoothFunction } from '../classes/SmoothFunction';
 import { Generator } from '../classes/Generator';
+import { ApproximateFunction } from '../classes/ApproximateFunction';
 
 
 const ChartWrapper = styled.div`
@@ -29,7 +30,6 @@ function genData(lowerBound: number, upperBound: number, stepNumber: number, y0:
         if (func.isSmooth) datasets.push(func.genDataRange(smoothRange, y0))
         else datasets.push(func.genDataRange(range, y0));
     });
-    console.log(datasets[0].data)
     return { labels: [], datasets: datasets };
 }
 
@@ -45,13 +45,51 @@ var actualFunction = new SmoothFunction(
             return 0
         }
         var c = Math.pow(Math.E, x0) * (y0 + x0) / x0;
-        console.log(c)
         return c * Math.pow(Math.E, x * (-1)) * x - x;
     },
     "y = c*e^(-x)*x -x",
     "red");
 
-var funcs = [actualFunction];
+const f = (x: number, y: number) => { return y / x - y - x };
+
+var Euler = new ApproximateFunction(
+    (x: number, y: number, h: number) => {
+        if (x === 0) {
+            return 0
+        }
+        return y + h * f(x, y);
+    },
+    "Euler",
+    "blue");
+
+
+var ImprovedEuler = new ApproximateFunction(
+    (x: number, y: number, h: number) => {
+        if (x === 0) {
+            return 0
+        }
+        const k1 = h * f(x, y);
+        const k2 = h * f(x + h, y + k1);
+        return y + (k1 + k2) / 2;
+    },
+    "ImprovedEuler",
+    "green");
+
+var Runge_Kutta = new ApproximateFunction(
+    (x: number, y: number, h: number) => {
+        if (x === 0) {
+            return 0
+        }
+        const k1 = h * f(x, y);
+        const k2 = h * f(x + h / 2, y + k1 / 2);
+        const k3 = h * f(x + h / 2, y + k2 / 2);
+        const k4 = h * f(x + h, y + k3);
+        return y + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+    },
+    "Runge_Kutta",
+    "black");
+
+var funcs = [actualFunction, Euler, ImprovedEuler, Runge_Kutta];
 
 const LineChart: React.FunctionComponent = () => {
 
@@ -83,18 +121,30 @@ const LineChart: React.FunctionComponent = () => {
     // Lower Computational Bound
     const [lowerBound, setLowerBound] = useState(1);
     const lowerBoundChanged = (e: any) => {
-        const val = max(-400000000, parseFloat(e.target.value));
-        setLowerBound(val);
-        if (upperBound < val) upperBoundChanged({ target: { value: val } });
-        setData(genData(val, upperBound, stepNumber, initialValue))
+        if (e.target.value){
+            const val = max(-400000000, parseFloat(e.target.value));
+            setLowerBound(val);
+            if (upperBound < val) upperBoundChanged({ target: { value: val } });
+            setData(genData(val, upperBound, stepNumber, initialValue))
+        }else{
+            setLowerBound(0);
+            if (upperBound < 0) upperBoundChanged({ target: { value: 0 } });
+            setData(genData(0, upperBound, stepNumber, initialValue))
+        }
     }
     // Upper Computational Bound
     const [upperBound, setUpperBound] = useState(10);
     const upperBoundChanged = (e: any) => {
-        const val = min(400000000, parseFloat(e.target.value));
-        setUpperBound(val);
-        if (lowerBound > val) lowerBoundChanged({ target: { value: val } });
-        setData(genData(lowerBound, val, stepNumber, initialValue));
+        if (e.target.value){
+            const val = min(400000000, parseFloat(e.target.value));
+            setUpperBound(val);
+            if (lowerBound > val) lowerBoundChanged({ target: { value: val } });
+            setData(genData(lowerBound, val, stepNumber, initialValue));
+        }else{
+            setUpperBound(0);
+            if (lowerBound > 0) lowerBoundChanged({ target: { value: 0 } });
+            setData(genData(lowerBound, 0, stepNumber, initialValue));
+        }
     }
 
     /* Initial Value & Co */
