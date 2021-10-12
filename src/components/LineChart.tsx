@@ -11,6 +11,7 @@ import StepsNumberNav from './StepsNumberNav';
 import ComputationalBoundsNav from './ComputationalBoundsNav';
 import { Function } from '../classes/Function';
 import { parse } from 'path';
+import InitialValueNav from './InitialValueNav';
 
 function genRange(start: number, finish: number, n: number) {
     const h = (finish - start) / n;
@@ -220,7 +221,7 @@ const LineChart: React.FunctionComponent = () => {
     // Lower Computational Bound
     const [lowerBound, setLowerBound] = useState(1);
     const lowerBoundChanged = (e: any) => {
-        const val = max(0, parseFloat(e.target.value));
+        const val = max(-4000000000, parseFloat(e.target.value));
         setLowerBound(val);
         if (upperBound < val) upperBoundChanged({target:{value:val}});
         setData(genData2(val, upperBound, stepNumber))
@@ -232,6 +233,14 @@ const LineChart: React.FunctionComponent = () => {
         setUpperBound(val);
         if (lowerBound > val) lowerBoundChanged({target:{value:val}});
         setData(genData2(lowerBound, val, stepNumber))
+    }
+
+    /* Initial Value & Co */
+    const [initialValue, setInitialValue] = useState(1);
+    const initialValueChanged = (e: any) => {
+        const val = max(0, parseFloat(e.target.value));
+        setInitialValue(val);
+        // setData(genData2(val, upperBound, stepNumber))
     }
 
     // /* Data & Co */
@@ -258,6 +267,10 @@ const LineChart: React.FunctionComponent = () => {
                     onChangeLowerBound={(e: any) => lowerBoundChanged(e)}
                     upperBound={upperBound}
                     lowerBound={lowerBound} />
+                <InitialValueNav
+                    label={'Initial value'}
+                    onChange={(e: any) => initialValueChanged(e)}
+                    value={initialValue} />
             </NavsWrapper>
         </>
     );
