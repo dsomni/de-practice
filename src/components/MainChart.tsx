@@ -114,6 +114,7 @@ const MainChart: React.FunctionComponent = () => {
     const minStepNumberChanged = (e: any) => {
         const val = max(2, parseInt(e.target.value));
         setMinStepNumber(val);
+        if (maxStepNumber < val) maxStepNumberChanged({target:{value: val +1 }});
         if (stepNumber < val) stepNumberChanged(val);
     }
     // Upper Bound Step Value
@@ -121,6 +122,7 @@ const MainChart: React.FunctionComponent = () => {
     const maxStepNumberChanged = (e: any) => {
         const val = min(1000, parseInt(e.target.value));
         setMaxStepNumber(val);
+        if (minStepNumber > val) minStepNumberChanged({target:{value: val -1 }});
         if (stepNumber > val) stepNumberChanged(val);
     }
 
