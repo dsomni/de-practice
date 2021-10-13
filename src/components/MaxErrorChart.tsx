@@ -27,6 +27,11 @@ const GlobalWrapper = styled.div`
     flex-direction: row;
 `;
 
+const TitleWrapper = styled.span`
+    font-size: 25pt;
+    margin: 10px;
+`;
+
 
 function genData(lowerBound: number, upperBound: number, minStepNumber: number, maxStepNumber: number, y0: number) {
     if (lowerBound >= upperBound || minStepNumber>maxStepNumber) return { labels: [], datasets: [] };
@@ -166,6 +171,7 @@ const MaxErrorChart: React.FunctionComponent = () => {
         <>
             <GlobalWrapper>
                 <NavsWrapper>
+                    <TitleWrapper>Maximum Error Chart</TitleWrapper>
                     <StepsNumberBoundsNav
                         label={'Steps Number'}
                         onChangeUpperBound={(e: any) => maxStepNumberChanged(e)}

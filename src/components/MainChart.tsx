@@ -26,9 +26,13 @@ const GlobalWrapper = styled.div`
     flex-direction: row;
 `;
 
+const TitleWrapper = styled.span`
+    font-size: 25pt;
+    margin: 10px;
+`;
 
 function genData(lowerBound: number, upperBound: number, stepNumber: number, y0: number) {
-    if (lowerBound >= upperBound ) return { labels: [], datasets: [] };
+    if (lowerBound >= upperBound) return { labels: [], datasets: [] };
     var range = generator.genRange(lowerBound, upperBound, stepNumber);
     var smoothRange = generator.genSmoothRange(lowerBound, upperBound, stepNumber);
 
@@ -55,8 +59,9 @@ var actualFunction = new SmoothFunction(
     "red");
 
 const f = (x: number, y: number) => {
-    if (Math.abs(parseFloat(x.toFixed(5)))===0) return 0;
-    return y / x - y - x; };
+    if (Math.abs(parseFloat(x.toFixed(5))) === 0) return 0;
+    return y / x - y - x;
+};
 
 var Euler = new ApproximateFunction(
     (x: number, y: number, h: number) => {
@@ -82,7 +87,7 @@ var Runge_Kutta = new ApproximateFunction(
         const k2 = h * f(x + h / 2, y + k1 / 2);
         const k3 = h * f(x + h / 2, y + k2 / 2);
         const k4 = h * f(x + h, y + k3);
-        if (y + (k1 + 2 * k2 + 2 * k3 + k4) / 6 > 1000000 && y<10000){
+        if (y + (k1 + 2 * k2 + 2 * k3 + k4) / 6 > 1000000 && y < 10000) {
             // console.log(x,y,h)
         }
         return y + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
@@ -165,6 +170,7 @@ const MainChart: React.FunctionComponent = () => {
         <>
             <GlobalWrapper>
                 <NavsWrapper>
+                    <TitleWrapper>Main Chart</TitleWrapper>
                     <StepsNumberNav
                         label={'N'}
                         onChangeN={(e: any) => stepNumberChanged(e)}
