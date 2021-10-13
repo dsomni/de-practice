@@ -92,7 +92,7 @@ var Runge_Kutta = new ApproximateFunction(
 
 var funcs = [actualFunction, Euler, ImprovedEuler, Runge_Kutta];
 
-const LineChart: React.FunctionComponent = () => {
+const MainChart: React.FunctionComponent = () => {
 
 
     /* Step Number & Co */
@@ -191,7 +191,7 @@ const LineChart: React.FunctionComponent = () => {
     );
 };
 
-export default LineChart;
+export default MainChart;
 
 
 function min(x: number, y: number) {
