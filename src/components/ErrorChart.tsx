@@ -27,6 +27,11 @@ const GlobalWrapper = styled.div`
     flex-direction: row;
 `;
 
+const TitleWrapper = styled.span`
+    font-size: 25pt;
+    margin: 10px;
+`;
+
 
 function genData(lowerBound: number, upperBound: number, stepNumber: number, y0: number) {
     if (lowerBound >= upperBound ) return { labels: [], datasets: [] };
@@ -164,6 +169,7 @@ const ErrorChart: React.FunctionComponent = () => {
         <>
             <GlobalWrapper>
                 <NavsWrapper>
+                    <TitleWrapper>Errors Chart</TitleWrapper>
                     <StepsNumberNav
                         label={'N'}
                         onChangeN={(e: any) => stepNumberChanged(e)}
