@@ -20,6 +20,10 @@ export class SmoothFunction {
         return y || null;
     }
 
+    public generatedDataInitValues(x: number, x0: number, y0: number): any {
+        return this.func(x, x0, y0);
+    }
+
 
     public genData(start: number, finish: number, stepsNumber: number, y0: number): any {
         var data: any[] = [];

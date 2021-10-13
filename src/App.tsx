@@ -1,7 +1,9 @@
 
 import { Global, css } from '@emotion/react';
+import ErrorChart from './components/ErrorChart';
 import GlobalInfo from "./components/GlobalInfo";
 import MainChart from './components/MainChart';
+import MaxErrorChart from './components/MaxErrorChart';
 
 const App: React.FunctionComponent = () => {
   return (
@@ -16,7 +18,7 @@ const App: React.FunctionComponent = () => {
       <div className="App">
           <>
             <GlobalInfo />
-            <MainChart />
+            <MaxErrorChart />
           </>
       </div>
     </div>
