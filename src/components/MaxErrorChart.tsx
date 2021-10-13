@@ -8,6 +8,7 @@ import { SmoothFunction } from '../classes/SmoothFunction';
 import { Generator } from '../classes/Generator';
 import { ApproximateFunction } from '../classes/ApproximateFunction';
 import { ErrorGenerator } from '../classes/ErrorGenerator';
+import StepsNumberBoundsNav from './StepsNumberBoundsNav';
 
 
 const ChartWrapper = styled.div`
@@ -28,12 +29,20 @@ const GlobalWrapper = styled.div`
 `;
 
 
-function genData(lowerBound: number, upperBound: number, stepNumber: number, y0: number) {
-    var range = generator.genRange(lowerBound, upperBound, stepNumber);
-
+function genData(lowerBound: number, upperBound: number, minStepNumber: number, maxStepNumber: number, y0: number) {
+    if (lowerBound >= upperBound || minStepNumber>maxStepNumber) return { labels: [], datasets: [] };
     var datasets: any[] = [];
     funcs.forEach(func => {
-        datasets.push(errorGenerator.genData(func.genDataRange(range, y0), lowerBound, y0))
+        let preDataSet:any = [];
+
+        for (let stepsNumber = minStepNumber; stepsNumber <= maxStepNumber; stepsNumber++) {
+                var range = generator.genRange(lowerBound, upperBound, stepsNumber);
+                preDataSet.push({
+                    datasets: errorGenerator.genData(func.genDataRange(range, y0), lowerBound, y0),
+                    stepsNumber: stepsNumber
+                })
+        }
+        datasets.push(errorGenerator.extractMaxError(preDataSet));
     });
     return { labels: [], datasets: datasets };
 }
@@ -95,26 +104,21 @@ const MaxErrorChart: React.FunctionComponent = () => {
 
 
     /* Step Number & Co */
-    // Step Number
-    const [stepNumber, setStepNumber] = useState(5);
-    const stepNumberChanged = (val: any) => {
-        // setData(genDatasets(genData(val)));
-        setData(genData(lowerBound, upperBound, val, initialValue));
-        setStepNumber(val);
-    };
     // Lower Bound Step Value
     const [minStepNumber, setMinStepNumber] = useState(2);
     const minStepNumberChanged = (e: any) => {
         const val = max(2, parseInt(e.target.value));
         setMinStepNumber(val);
-        if (stepNumber < val) stepNumberChanged(val);
+        if (maxStepNumber < val) maxStepNumberChanged({target: { value: val}});
+        setData(genData(lowerBound, upperBound, val, maxStepNumber, initialValue))
     }
     // Upper Bound Step Value
     const [maxStepNumber, setMaxStepNumber] = useState(10);
     const maxStepNumberChanged = (e: any) => {
-        const val = min(1000, parseInt(e.target.value));
+        const val = min(4000000, parseInt(e.target.value));
         setMaxStepNumber(val);
-        if (stepNumber > val) stepNumberChanged(val);
+        if (minStepNumber > val) minStepNumberChanged({target: { value: val}});
+        setData(genData(lowerBound, upperBound, minStepNumber, val, initialValue))
     }
 
     /* Computational Bounds & Co */
@@ -125,11 +129,11 @@ const MaxErrorChart: React.FunctionComponent = () => {
             const val = max(-400000000, parseFloat(e.target.value));
             setLowerBound(val);
             if (upperBound < val) upperBoundChanged({ target: { value: val } });
-            setData(genData(val, upperBound, stepNumber, initialValue))
+            setData(genData(val, upperBound, minStepNumber, maxStepNumber, initialValue))
         } else {
             setLowerBound(0);
             if (upperBound < 0) upperBoundChanged({ target: { value: 0 } });
-            setData(genData(0, upperBound, stepNumber, initialValue))
+            setData(genData(0, upperBound, minStepNumber, maxStepNumber, initialValue))
         }
     }
     // Upper Computational Bound
@@ -139,11 +143,11 @@ const MaxErrorChart: React.FunctionComponent = () => {
             const val = min(400000000, parseFloat(e.target.value));
             setUpperBound(val);
             if (lowerBound > val) lowerBoundChanged({ target: { value: val } });
-            setData(genData(lowerBound, val, stepNumber, initialValue));
+            setData(genData(lowerBound, val, minStepNumber, maxStepNumber, initialValue));
         } else {
             setUpperBound(0);
             if (lowerBound > 0) lowerBoundChanged({ target: { value: 0 } });
-            setData(genData(lowerBound, 0, stepNumber, initialValue));
+            setData(genData(lowerBound, 0, minStepNumber, maxStepNumber, initialValue));
         }
     }
 
@@ -152,25 +156,24 @@ const MaxErrorChart: React.FunctionComponent = () => {
     const initialValueChanged = (e: any) => {
         const val = max(-400000000, parseFloat(e.target.value));
         setInitialValue(val);
-        setData(genData(lowerBound, upperBound, stepNumber, val));
+        setData(genData(lowerBound, upperBound, minStepNumber, maxStepNumber, val));
     }
 
     // /* Data & Co */
-    const [data, setData] = useState(genData(lowerBound, upperBound, stepNumber, initialValue));
+    const [data, setData] = useState(genData(lowerBound, upperBound, minStepNumber, maxStepNumber, initialValue));
 
 
     return (
         <>
             <GlobalWrapper>
                 <NavsWrapper>
-                    <StepsNumberNav
-                        label={'N'}
-                        onChangeN={(e: any) => stepNumberChanged(e)}
-                        onChangeMaxN={(e: any) => maxStepNumberChanged(e)}
-                        onChangeMinN={(e: any) => minStepNumberChanged(e)}
-                        value={stepNumber}
-                        maxVal={maxStepNumber}
-                        minVal={minStepNumber} />
+                    <StepsNumberBoundsNav
+                        label={'Steps Number'}
+                        onChangeUpperBound={(e: any) => maxStepNumberChanged(e)}
+                        onChangeLowerBound={(e: any) => minStepNumberChanged(e)}
+                        upperBound={maxStepNumber}
+                        lowerBound={minStepNumber}
+                        />
                     <ComputationalBoundsNav
                         label={'Bounds'}
                         onChangeUpperBound={(e: any) => upperBoundChanged(e)}
@@ -183,7 +186,7 @@ const MaxErrorChart: React.FunctionComponent = () => {
                         value={initialValue} />
                 </NavsWrapper>
                 <ChartWrapper>
-                    <Line data={data} options={genOptions(lowerBound, upperBound, stepNumber, false)} />
+                    <Line data={data} options={genOptions(lowerBound, upperBound, minStepNumber, false)} />
                 </ChartWrapper>
             </GlobalWrapper>
         </>

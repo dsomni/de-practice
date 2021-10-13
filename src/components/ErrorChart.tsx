@@ -29,6 +29,7 @@ const GlobalWrapper = styled.div`
 
 
 function genData(lowerBound: number, upperBound: number, stepNumber: number, y0: number) {
+    if (lowerBound >= upperBound ) return { labels: [], datasets: [] };
     var range = generator.genRange(lowerBound, upperBound, stepNumber);
 
     var datasets: any[] = [];
