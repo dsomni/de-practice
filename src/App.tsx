@@ -6,9 +6,9 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-const MainChart = lazy(() => import('./components/MainChart'));
-const MaxErrorChart = lazy(() => import('./components/MaxErrorChart'));
-const ErrorChart = lazy(() => import('./components/ErrorChart'));
+const MainChart = lazy(() => import('./charts/MainChart'));
+const MaxErrorChart = lazy(() => import('./charts/MaxErrorChart'));
+const ErrorChart = lazy(() => import('./charts/ErrorChart'));
 
 const Nav = styled.div`
   display: flex;
