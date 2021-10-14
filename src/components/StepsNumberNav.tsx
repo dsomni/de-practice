@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { NavWrapper } from "../styles";
+import { NavWrapperSlider } from "../styles";
 import InputField from "./InputField";
 import RangeSlider from "./RangeSlider";
 
@@ -9,7 +9,7 @@ const StepsNumberNav = ({ label, onChangeN, onChangeMaxN, onChangeMinN, value, m
 }) => {
 
   return (
-    <NavWrapper>
+    <NavWrapperSlider>
       <InputField
         name={"Min N"}
         onChange={onChangeMinN}
@@ -25,7 +25,7 @@ const StepsNumberNav = ({ label, onChangeN, onChangeMaxN, onChangeMinN, value, m
         name={"Max N"}
         onChange={onChangeMaxN}
         value={maxVal} />
-    </NavWrapper>
+    </NavWrapperSlider>
   );
 };
 
