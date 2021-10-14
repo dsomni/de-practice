@@ -22,13 +22,27 @@ export const TitleWrapper = styled.span`
     margin: 10px;
 `;
 
-export const NavWrapper = styled.div`
+export const NavWrapperSlider = styled.div`
     border: 2px black solid;
     display: flex;
     align-items: center;
     margin: 10px;
     padding: 5px;
     gap: 25px;
+    width: 100%;
+    min-width: 430px;
+    max-width: 500px;
+    flex-direction: row;
+    justify-content: space-around;
+`;
+
+export const NavWrapper = styled.div`
+    border: 2px black solid;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    padding: 5px;
+    flex-direction: column;
     width: 100%;
     min-width: 430px;
     max-width: 500px;
