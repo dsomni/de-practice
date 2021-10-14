@@ -1,20 +1,7 @@
-import styled from "@emotion/styled";
 import { memo } from "react";
+import { NavWrapper } from "../styles";
 import InputField from "./InputField";
 import RangeSlider from "./RangeSlider";
-
-const NavWrapper = styled.div`
-    border: 2px black solid;
-    display: flex;
-    align-items: center;
-    margin: 10px;
-    padding: 5px;
-    gap: 25px;
-    width: 100%;
-    min-width: 430px;
-    max-width: 500px;
-    justify-content: space-around;
-`;
 
 
 const StepsNumberNav = ({ label, onChangeN, onChangeMaxN, onChangeMinN, value, maxVal, minVal }: {
