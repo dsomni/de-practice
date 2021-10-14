@@ -1,22 +1,15 @@
-import { Generator } from "./Generator";
+import { AbstractFunction } from "./AbstractFunction";
 
-export class SmoothFunction {
+export class SmoothFunction extends AbstractFunction {
     private func: (argument: number, x0: number, y0: number) => any;
-    private label: string;
-    private colour: string;
-    public isSmooth: boolean = true;
-
-    private data: number[] = [];
-    private generator = new Generator();
 
     constructor(func: (argument: number, x0: number, y0: number) => any, label: string, colour: string) {
+        super(label, colour, true);
         this.func = func;
-        this.label = label;
-        this.colour = colour;
     }
 
     public generatedData(x: number): any {
-        const y = this.data.find((obj: any) => obj.x.toFixed(5) === x.toFixed(5));
+        const y = this.data.find((obj: any) => obj.x.toFixed(this.precision) === x.toFixed(this.precision));
         return y || null;
     }
 
@@ -30,7 +23,7 @@ export class SmoothFunction {
         var smoothRange = this.generator.genSmoothRange(start, finish, stepsNumber);
 
         for (let i = 0; i < smoothRange.length; i++) {
-            data.push({ x: smoothRange[i].toFixed(5), y: parseFloat(this.func(smoothRange[i], start, y0).toFixed(5)) });
+            data.push({ x: smoothRange[i].toFixed(this.precision), y: parseFloat(this.func(smoothRange[i], start, y0).toFixed(this.precision)) });
         }
         this.data = data;
         return {
@@ -47,7 +40,7 @@ export class SmoothFunction {
         if (smoothRange.length > 0) {
             var x0 = smoothRange[0];
             for (let i = 0; i < smoothRange.length; i++) {
-                data.push({ x: smoothRange[i].toFixed(5), y: parseFloat(this.func(smoothRange[i], x0, y0).toFixed(5)) });
+                data.push({ x: smoothRange[i].toFixed(this.precision), y: parseFloat(this.func(smoothRange[i], x0, y0).toFixed(this.precision)) });
             }
         }
         this.data = data;

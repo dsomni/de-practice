@@ -1,22 +1,17 @@
-export class ApproximateFunction {
-    private gen_function: (x: number, y: number, stepSize: number) => number;
-    private label: string;
-    private colour: string;
-    public isSmooth: boolean = false;
+import { AbstractFunction } from "./AbstractFunction";
 
-    private data: number[] = [];
+export class ApproximateFunction extends AbstractFunction {
+    private gen_function: (x: number, y: number, stepSize: number) => number;
 
     constructor(
         gen_function: (x: number, y: number, stepSize: number) => number,
         label: string, colour: string) {
-
+        super(label, colour, false);
         this.gen_function = gen_function;
-        this.label = label;
-        this.colour = colour;
     }
 
     public generatedData(x: number): any {
-        const y = this.data.find((obj: any) => obj.x.toFixed(5) === x.toFixed(5));
+        const y = this.data.find((obj: any) => obj.x.toFixed(this.precision) === x.toFixed(this.precision));
         return y || null;
     }
 
@@ -31,16 +26,16 @@ export class ApproximateFunction {
         var x = start;
         var y = y0;
         data.push({
-            x: x.toFixed(5),
-            y: parseFloat(y.toFixed(5))
+            x: x.toFixed(this.precision),
+            y: parseFloat(y.toFixed(this.precision))
         })
 
         while (x<finish){
             y = this.gen_function(x, y, stepSize);
             x += stepSize;
             data.push({
-                x: x.toFixed(5),
-                y: parseFloat(y.toFixed(5))
+                x: x.toFixed(this.precision),
+                y: parseFloat(y.toFixed(this.precision))
             })
         }
         this.data = data;
@@ -67,14 +62,14 @@ export class ApproximateFunction {
         var x = range[0];
         var y = y0;
         data.push({
-            x: x.toFixed(5),
-            y: parseFloat(y.toFixed(5))
+            x: x.toFixed(this.precision),
+            y: parseFloat(y.toFixed(this.precision))
         })
 
         for (let i = 1; i < range.length; i++) {
             y = this.gen_function(range[i-1], y, stepSize);
             data.push({
-                x: range[i].toFixed(5),
+                x: range[i].toFixed(this.precision),
                 y: y
             })
         }
