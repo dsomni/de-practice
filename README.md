@@ -4,9 +4,14 @@
 
 1. Given the initial value problem with the ODE of the first order and some
 interval:
+
     y' = f(x,y)
+
     y(x0) = y0
+
     x0 <= x <= X
+
+
 
 2. Construct following approximations of the solution
 of a given initial value problem: Euler’s method, improved Euler’s method, Runge-Kutta method.
