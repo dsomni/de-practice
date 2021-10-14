@@ -7,29 +7,7 @@ import InitialValueNav from './InitialValueNav';
 import { SmoothFunction } from '../classes/SmoothFunction';
 import { Generator } from '../classes/Generator';
 import { ApproximateFunction } from '../classes/ApproximateFunction';
-
-
-const ChartWrapper = styled.div`
-    max-width: 1800px;
-    width: 100%;
-    margin:15px;
-`;
-
-const NavsWrapper = styled.div`
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-`;
-
-const GlobalWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-
-const TitleWrapper = styled.span`
-    font-size: 25pt;
-    margin: 10px;
-`;
+import { ChartWrapper, GlobalWrapper, NavsWrapper, TitleWrapper } from '../styles';
 
 function genData(lowerBound: number, upperBound: number, stepNumber: number, y0: number) {
     if (lowerBound >= upperBound) return { labels: [], datasets: [] };
